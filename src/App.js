@@ -41,6 +41,7 @@ import InlineLabel from "./screens/form/inlineLabel";
 import FloatingLabel from "./screens/form/floatingLabel";
 import PlaceholderLabel from "./screens/form/placeholder";
 import StackedLabel from "./screens/form/stacked";
+import ArmLogin from "./screens/custom/armlogin";
 import RegularInput from "./screens/form/regular";
 import UnderlineInput from "./screens/form/underline";
 import RoundedInput from "./screens/form/rounded";
@@ -208,6 +209,7 @@ const AppNavigator = StackNavigator(
     FloatingLabel: { screen: FloatingLabel },
     PlaceholderLabel: { screen: PlaceholderLabel },
     StackedLabel: { screen: StackedLabel },
+    ArmLogin: { screen: ArmLogin },
     RegularInput: { screen: RegularInput },
     UnderlineInput: { screen: UnderlineInput },
     RoundedInput: { screen: RoundedInput },
