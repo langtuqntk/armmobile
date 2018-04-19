@@ -33,10 +33,6 @@ const datas = [
     text: "Placeholder Label"
   },
   {
-    route: "StackedLabel",
-    text: "Stacked Label"
-  },
-  {
     route: "RegularInput",
     text: "Regular Textbox"
   },

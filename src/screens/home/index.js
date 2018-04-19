@@ -3,6 +3,7 @@ import { ImageBackground, View, StatusBar } from "react-native";
 import { Container, Button, H3, Text } from "native-base";
 
 import styles from "./styles";
+import { onSignOut } from "../../utils/auth";
 
 const launchscreenBg = require("../../../assets/launchscreen-bg.png");
 const launchscreenLogo = require("../../../assets/logo-kitchen-sink.png");
@@ -34,6 +35,12 @@ class Home extends Component {
               onPress={() => this.props.navigation.navigate("DrawerOpen")}
             >
               <Text>Lets Go!</Text>
+            </Button>
+            <Button
+              style={{ backgroundColor: "#6FAF98", alignSelf: "center", marginTop: 10 }}
+              onPress={() => onSignOut().then(() => this.props.navigation.navigate("SignedOut"))}
+            >
+              <Text>Log out</Text>
             </Button>
           </View>
         </ImageBackground>

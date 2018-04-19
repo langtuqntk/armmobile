@@ -16,6 +16,7 @@ import {
   Text
 } from "native-base";
 import styles from "./styles";
+import { onSignIn } from "../../utils/auth";
 
 class Stacked extends Component {
 
@@ -30,7 +31,7 @@ class Stacked extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     if(this.state.code !== nextState.code) {
-      fetch('http://10.0.3.2:8443/oauth/token', {
+      fetch('https://stg.arm-system-holdings.com/oauth/token', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -46,7 +47,8 @@ class Stacked extends Component {
       }).then((response) => response.json())
         .then((responseJson) => {
           console.log(responseJson);
-          this.setState({code: nextState.code, token: responseJson.result.access_token});
+          this.setState({code: nextState.code, token: responseJson.success ? responseJson.result.access_token : responseJson.error.errorMessage});
+          onSignIn(this.state.token).then(() => this.props.navigation.navigate("SignedIn"));;
         })
         .catch((error) => {
           console.error(error);
@@ -58,22 +60,15 @@ class Stacked extends Component {
     return (
       <Container style={styles.container}>
         <Header>
-          <Left>
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
           <Body>
             <Title>Stacked Label</Title>
           </Body>
           <Right />
         </Header>
         <Content>
-          <Text>{this.state.code}</Text>
           <Button block style={{ margin: 15, marginTop: 50 }} onPress={() => this.props.navigation.navigate('ArmLogin', {returnData: this.returnData.bind(this)})}>
             <Text>Sign In</Text>
           </Button>
-          <Text>{this.state.token}</Text>
         </Content>
       </Container>
     );

@@ -1,6 +1,7 @@
-import React from "react";
+import React, {Component} from "react";
 import { Root } from "native-base";
-import { StackNavigator, DrawerNavigator } from "react-navigation";
+import { StackNavigator, DrawerNavigator, SwitchNavigator } from "react-navigation";
+import { isSignedIn } from "./utils/auth";
 
 import Header from "./screens/Header/";
 import Header1 from "./screens/Header/1";
@@ -159,6 +160,18 @@ const Drawer = DrawerNavigator(
   }
 );
 
+const LoginNavigator = StackNavigator(
+  {
+    StackedLabel: { screen: StackedLabel },
+    ArmLogin: { screen: ArmLogin },
+  },
+  {
+    initialRouteName: "StackedLabel",
+    headerMode: "none"
+  }
+);
+
+
 const AppNavigator = StackNavigator(
   {
     Drawer: { screen: Drawer },
@@ -208,8 +221,6 @@ const AppNavigator = StackNavigator(
     InlineLabel: { screen: InlineLabel },
     FloatingLabel: { screen: FloatingLabel },
     PlaceholderLabel: { screen: PlaceholderLabel },
-    StackedLabel: { screen: StackedLabel },
-    ArmLogin: { screen: ArmLogin },
     RegularInput: { screen: RegularInput },
     UnderlineInput: { screen: UnderlineInput },
     RoundedInput: { screen: RoundedInput },
@@ -277,7 +288,47 @@ const AppNavigator = StackNavigator(
   }
 );
 
-export default () =>
-  <Root>
-    <AppNavigator />
-  </Root>;
+const createRootNavigator = (signedIn = false) => {
+  return SwitchNavigator(
+    {
+      SignedIn: {
+        screen: AppNavigator
+      },
+      SignedOut: {
+        screen: LoginNavigator
+      }
+    },
+    {
+      initialRouteName: signedIn ? "SignedIn" : "SignedOut"
+    }
+  );
+};
+
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      signedIn: false,
+      checkedSignIn: false
+    };
+  }
+
+  componentDidMount() {
+    isSignedIn()
+      .then(res => this.setState({ signedIn: res, checkedSignIn: true }))
+      .catch(err => alert("An error occurred"));
+  }
+
+  render() {
+    const { checkedSignIn, signedIn } = this.state;
+
+    // If we haven't checked AsyncStorage yet, don't render anything (better ways to do this)
+    if (!checkedSignIn) {
+      return null;
+    }
+
+    const Layout = createRootNavigator(signedIn);
+    return <Layout />;
+  }
+}
