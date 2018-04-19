@@ -15,52 +15,34 @@ import {
   Form,
   Text
 } from "native-base";
+import {WebView} from 'react-native';
 import styles from "./styles";
 
 class ArmLogin extends Component {
-
-  componentDidMount() {
-    console.log(this.props.navigation.state.params.code);
-    fetch('https://stg.arm-system-holdings.com/oauth/token', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        grant_type: 'authorization_code',
-        client_id: '5ad59d978b0b311bd73b11d9',
-        client_key: 'Q6A0LNMfXd3vfblxpY20t9UnUg2B4jZp',
-        code: this.props.navigation.state.params.code,
-        redirect_uri: 'http://test-langtuqntk.c9users.io:8080/getToken'
-      }),
-    }).then((response) => response.json())
-      .then((responseJson) => {
-        console.log(responseJson);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  constructor(props) {
+    super(props);
+    this.state = {
+      url: ''
+    };
+  }
+  _onNavigationStateChange(webViewState){
+    if(/getToken/i.test(webViewState.url) && this.state.url !== webViewState.url) {
+      this.setState({url: webViewState.url});
+      const index = webViewState.url.indexOf('code=');
+      const code = index > -1 ? webViewState.url.substr(index + 5, webViewState.url.length - 1) : 'access_denied';
+      this.props.navigation.state.params.returnData(code);
+      this.props.navigation.goBack();
+    }
   }
 
   render() {
     return (
-      <Container style={styles.container}>
-        <Header>
-          <Left>
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Arm Login</Title>
-          </Body>
-          <Right />
-        </Header>
-        <Content>
-          <Text>{this.props.navigation.state.params.code}</Text>
-        </Content>
-      </Container>
+      <WebView
+        ref={webview => (this.webview = webview)}
+        source={{uri: 'http://10.0.3.2:8443/oauth/authorize?response_type=code&scope=USER_PROLILE,WALLET_INFO&client_id=5ad59d978b0b311bd73b11d9'}}
+        style={{marginTop: 20}}
+        onNavigationStateChange={this._onNavigationStateChange.bind(this)}
+      />
     );
   }
 }

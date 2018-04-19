@@ -15,23 +15,42 @@ import {
   Form,
   Text
 } from "native-base";
-import {WebView} from 'react-native';
 import styles from "./styles";
 
 class Stacked extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      url: ''
-    };
-  }  
-  _onNavigationStateChange(webViewState){
-    if(/getToken/i.test(webViewState.url) && this.state.url !== webViewState.url) {
-      this.setState({url: webViewState.url});
-      const index = webViewState.url.indexOf('code=');
-      const code = index > -1 ? webViewState.url.substr(index + 5, webViewState.url.length - 1) : 'access_denied';
-      console.log(code);
-      this.props.navigation.navigate('ArmLogin', {code});
+
+  state = {
+    code: '',
+    token: ''
+  }
+
+  returnData(code) {
+    this.setState({code});
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if(this.state.code !== nextState.code) {
+      fetch('http://10.0.3.2:8443/oauth/token', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          grant_type: 'authorization_code',
+          client_id: '5ad59d978b0b311bd73b11d9',
+          client_key: 'Q6A0LNMfXd3vfblxpY20t9UnUg2B4jZp',
+          code: nextState.code,
+          redirect_uri: 'http://test-langtuqntk.c9users.io:8080/getToken'
+        }),
+      }).then((response) => response.json())
+        .then((responseJson) => {
+          console.log(responseJson);
+          this.setState({code: nextState.code, token: responseJson.result.access_token});
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }
 
@@ -49,12 +68,13 @@ class Stacked extends Component {
           </Body>
           <Right />
         </Header>
-        <WebView
-          ref={webview => (this.webview = webview)}
-          source={{uri: 'https://stg.arm-system-holdings.com/oauth/authorize?response_type=code&scope=BASIC_ACCESS&client_id=5ad59d978b0b311bd73b11d9'}}
-          style={{marginTop: 20}}
-          onNavigationStateChange={this._onNavigationStateChange.bind(this)}
-        />
+        <Content>
+          <Text>{this.state.code}</Text>
+          <Button block style={{ margin: 15, marginTop: 50 }} onPress={() => this.props.navigation.navigate('ArmLogin', {returnData: this.returnData.bind(this)})}>
+            <Text>Sign In</Text>
+          </Button>
+          <Text>{this.state.token}</Text>
+        </Content>
       </Container>
     );
   }
