@@ -54,7 +54,7 @@ class Anatomy extends Component {
     AsyncStorage.getItem(USER_KEY)
       .then(res => {
         if (res !== null) {
-          fetch('http://10.0.3.2:4000/v1/single', {
+          fetch('https://stg-api.arm-system-holdings.com/rpc', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -103,7 +103,7 @@ class Anatomy extends Component {
           <Left>
             <Button
               transparent
-              onPress={() => this.props.navigation.navigate("DrawerOpen")}
+              onPress={() => this.props.drawerNavigation.navigate("DrawerOpen")}
             >
               <Icon name="ios-menu" />
             </Button>
@@ -165,14 +165,14 @@ class Anatomy extends Component {
           onPress={() => this.setState({ active: !this.state.active })}
         >
           <Icon type="Ionicons" name="md-add-circle"/>
-          <Button style={{ backgroundColor: "#34A34F" }}>
-            <IconNB name="logo-whatsapp" />
+          <Button style={{ backgroundColor: "#34A34F" }} onPress={() => this.props.navigation.navigate('TrustAsset')}>
+            <Icon type="Ionicons" name="logo-bitcoin"/>
           </Button>
           <Button style={{ backgroundColor: "#3B5998" }}>
-            <IconNB name="logo-facebook" />
+            <Icon type="Ionicons" name="md-card"/>
           </Button>
           <Button disabled style={{ backgroundColor: "#DD5144" }}>
-            <IconNB name="ios-mail" />
+            <Icon type="Ionicons" name="md-cash"/>
           </Button>
         </Fab>
       </Container>

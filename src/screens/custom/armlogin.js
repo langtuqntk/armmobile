@@ -39,7 +39,7 @@ class ArmLogin extends Component {
     return (
       <WebView
         ref={webview => (this.webview = webview)}
-        source={{uri: 'http://10.0.3.2:8443/oauth/authorize?response_type=code&scope=USER_PROLILE,WALLET_INFO&client_id=5ad59d978b0b311bd73b11d9'}}
+        source={{uri: 'https://stg.arm-system-holdings.com/oauth/authorize?response_type=code&scope=USER_PROLILE,WALLET_INFO&client_id=5ad59d978b0b311bd73b11d9'}}
         style={{marginTop: 20}}
         onNavigationStateChange={this._onNavigationStateChange.bind(this)}
       />

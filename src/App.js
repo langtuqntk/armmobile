@@ -97,7 +97,6 @@ import SimpleDeck from "./screens/deckswiper/simple";
 import AdvancedDeck from "./screens/deckswiper/advanced";
 
 import Home from "./screens/home/";
-import Anatomy from "./screens/anatomy/";
 import Footer from "./screens/footer/";
 import NHBadge from "./screens/badge/";
 import NHButton from "./screens/button/";
@@ -122,11 +121,12 @@ import SideBar from "./screens/sidebar";
 import Segment from "./screens/segment";
 import NHToast from "./screens/toast/";
 import Actionsheet from "./screens/actionsheet";
+import WalletNavigator from "./screens/wallet/route";
 
 const Drawer = DrawerNavigator(
   {
     Home: { screen: Home },
-    Anatomy: { screen: Anatomy },
+    WalletNavigator: { screen: ({navigation}) => <WalletNavigator drawerNavigation={navigation}/>},
     Header: { screen: Header },
     Footer: { screen: Footer },
     NHBadge: { screen: NHBadge },
@@ -152,13 +152,14 @@ const Drawer = DrawerNavigator(
     Actionsheet: { screen: Actionsheet }
   },
   {
-    initialRouteName: "Home",
+    initialRouteName: "WalletNavigator",
     contentOptions: {
       activeTintColor: "#e91e63"
     },
     contentComponent: props => <SideBar {...props} />
   }
 );
+
 
 const LoginNavigator = StackNavigator(
   {
@@ -284,7 +285,7 @@ const AppNavigator = StackNavigator(
   },
   {
     initialRouteName: "Drawer",
-    headerMode: "none"
+    headerMode: 'none',
   }
 );
 
@@ -299,7 +300,7 @@ const createRootNavigator = (signedIn = false) => {
       }
     },
     {
-      initialRouteName: signedIn ? "SignedIn" : "SignedOut"
+      initialRouteName: !signedIn ? "SignedIn" : "SignedOut"
     }
   );
 };

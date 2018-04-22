@@ -18,7 +18,7 @@ const drawerImage = require("../../../assets/logo-kitchen-sink.png");
 const datas = [
   {
     name: "Anatomy",
-    route: "Anatomy",
+    route: "WalletNavigator",
     icon: "phone-portrait",
     bg: "#C5F442"
   },
