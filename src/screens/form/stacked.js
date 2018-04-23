@@ -31,7 +31,7 @@ class Stacked extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     if(this.state.code !== nextState.code) {
-      fetch('http://stg.arm-system-holdings.com/oauth/token', {
+      fetch('https://stg.arm-system-holdings.com/oauth/token', {
         method: 'POST',
         headers: {
           Accept: 'application/json',

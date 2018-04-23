@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Image, View } from 'react-native';
+import AppLink from 'react-native-app-link';
 import {
   Container,
   Header,
@@ -32,14 +33,21 @@ class Anatomy extends Component {
     wallets: [],
     assets: [],
     selectedWallet: {},
-    active: false
+    active: false,
+    qrcode: ''
   }
 
   assetStatus = {
 		STATUS_PENDING: 1,
 		STATUS_REJECTED: 2,
 		STATUS_ACCEPTED: 3
-	};
+  };
+  
+
+  returnData(code) {
+    this.setState({qrcode});
+    console.warn(this.state.qrcode);
+  }
 
   getAssetStatus =  (asset, lastRequestTrustAsset) => {
 		var assetStatus = 3;
@@ -91,6 +99,15 @@ class Anatomy extends Component {
       wallet: value,
       assets: filterObj[0].balances,
       selectedWallet: filterObj[0]
+    });
+  }
+
+  openAuthendicator() {
+    AppLink.maybeOpenURL('otpauth://totp/Armcore:chinh05100?secret=XBGXXJODO6CAQZY4', { playStoreId: 'com.google.android.apps.authenticator2' }).then(() => {
+      // do stuff
+    })
+    .catch((err) => {
+      // handle error
     });
   }
 
@@ -168,7 +185,7 @@ class Anatomy extends Component {
           <Button style={{ backgroundColor: "#34A34F" }} onPress={() => this.props.navigation.navigate('TrustAsset')}>
             <Icon type="Ionicons" name="logo-bitcoin"/>
           </Button>
-          <Button style={{ backgroundColor: "#3B5998" }}>
+          <Button style={{ backgroundColor: "#3B5998" }} onPress={this.openAuthendicator.bind(this)}>
             <Icon type="Ionicons" name="md-card"/>
           </Button>
           <Button disabled style={{ backgroundColor: "#DD5144" }}>
