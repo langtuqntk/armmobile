@@ -8,10 +8,14 @@ import {
 import Camera from 'react-native-camera';
 
 export default class TrustAsset extends Component {
+    state = {
+      qrcodeResult: ''
+    }
     onBarCodeRead = (e) => {
       console.log(e.data);
-      this.props.navigation.state.params.returnData(e.data);
-      this.props.navigation.goBack();
+      this.setState({qrcodeResult: e.data});
+      // this.props.navigation.state.params.returnData(e.data);
+      // this.props.navigation.goBack();
     }
 
     render () {
@@ -25,7 +29,7 @@ export default class TrustAsset extends Component {
                     >
                         <Text style={{
                             backgroundColor: 'white'
-                        }}>{this.state.qrcode}</Text>
+                        }}>{this.state.qrcodeResult}</Text>
                     </Camera>
             </View>
         )
